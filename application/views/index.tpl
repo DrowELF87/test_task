@@ -28,6 +28,35 @@ include_once('common/header.tpl');
     <div id="responseCont"></div>
 </form>
 
+<?php if (!empty($stored)) { ?>
+        <select>
+        <?php foreach ($stored as $storeItem) { ?>
+              <option value="<?=$storeItem->original_uri ?>">
+                  <?=$storeItem->short_uri ?>
+              </option>
+        <?php } ?>
+        </select>
+        <input type="button" value="Share">
+
+        <select>
+            <?php foreach ($users as $user) { ?>
+                <option value="<?=$user->id ?>">
+                    <?=$user->fname ?>&nbsp;<?=$user->lname ?>
+                </option>
+            <?php } ?>
+        </select>
+<?php } ?>
+
+<div class="income">
+    Income (<?=count($myUri) ?>)
+</div>
+
+<div class="incomeCont">
+    <?php foreach ($myUri as $myUriItem) { ?>
+        <a href="http://<?=$myUriItem->original_uri ?>" target="_blank"><?=$myUriItem->short_uri ?></a><br/>
+    <?php } ?>
+</div>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#save').click(function () {
@@ -40,6 +69,10 @@ include_once('common/header.tpl');
                 }
             })
         });
+
+        $('.income').click(function () {
+            $('.incomeCont').toggle();
+        })
     });
 
 </script>

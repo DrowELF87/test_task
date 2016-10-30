@@ -37,7 +37,6 @@ class UriController extends CI_Controller {
         // Если всё ок, то генерируем короткий урл
         $data['shortUri'] = $this->generateUri($originalUri);
 
-
         $this->load->view('index.tpl', $data);
     }
 
