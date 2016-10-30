@@ -9,4 +9,9 @@ class Welcome extends CI_Controller {
 		$this->load->view('index.tpl');
         $this->load->view('common/footer.tpl');
 	}
+
+	public function checkUri() {
+	    var_dump($_POST);
+        die('ccc');
+    }
 }
