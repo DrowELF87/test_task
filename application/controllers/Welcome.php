@@ -3,15 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
-	public function index()
-	{
-        $this->load->view('common/header.tpl');
-		$this->load->view('index.tpl');
-        $this->load->view('common/footer.tpl');
-	}
+    public function index()
+    {
+        $data['originalUri'] = '';
+        $data['shortUri'] = '';
 
-	public function checkUri() {
-	    var_dump($_POST);
-        die('ccc');
+        $this->load->view('index.tpl', $data);
     }
 }

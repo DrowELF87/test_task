@@ -1,29 +1,86 @@
 <?php
 
+/**
+ * Class UriController
+ * Контроллер для обработки УРЛов
+ */
 class UriController extends CI_Controller {
 
     function index() {
         $this->checkUri();
     }
 
+    /**
+     * Функция для проверки введённого пользователем
+     * и генерации короткого УРЛа
+     *
+     * @return bool
+     */
     private function checkUri() {
-        if (!$_POST['originalUri']) {
+        if (!trim($_POST['originalUri'])) {
             echo 'Type valid Uri in a field';
+
             return false;
         }
 
-        $response = $this->getWebPage($_POST['originalUri']);
-        $this->vd($response);
-        die('gag');
+        $originalUri = str_replace(' ', '', $_POST['originalUri']);
+        $data['originalUri'] = html_escape($originalUri);
 
+        // Получаем ответ от запрашиваемой страницы
+        $response = $this->getWebPage($originalUri);
+        if ((!$response['content_type'] && !$response['http_code']) || ($response['http_code'] === 404 || $response['http_code'] === 502)) {
+            echo 'Website is currently unavailable';
+
+            return false;
+        }
+
+        // Если всё ок, то генерируем короткий урл
+        $data['shortUri'] = $this->generateUri($originalUri);
+
+
+        $this->load->view('index.tpl', $data);
     }
 
-    function vd($var) {
+    /**
+     * Функция для генрации короткого УРЛа
+     *
+     * @param string $originalUri
+     * @return bool|string
+     */
+    private function generateUri($originalUri = '') {
+        if (!$originalUri) {
+            echo 'Original URI is incorrect';
+
+            return false;
+        }
+
+        $resultMatch = array();
+        $pattern = '/(http(s|):\/\/|^)(.*?)(\/|$)/';
+        preg_match_all($pattern, $originalUri, $resultMatch);
+
+        if (!empty($resultMatch) && isset($resultMatch[1][0])) {
+            $resultString = $resultMatch[3][0];
+        }
+
+        if (strlen($resultString) > 10) {
+            $resultString = substr($resultString, 0, 10);
+        }
+
+        return $resultString;
+    }
+
+    public function vd($var) {
         echo '<pre>';
         echo var_dump($var);
         echo '</pre>';
     }
 
+    /**
+     * Стучимся по указанному адресу и получаем коллбек страницы
+     *
+     * @param $url
+     * @return mixed
+     */
     private function getWebPage($url) {
         $options = array(
             CURLOPT_RETURNTRANSFER => true,   // return web page
@@ -43,8 +100,6 @@ class UriController extends CI_Controller {
         curl_setopt_array($ch, $options);
 
         curl_exec($ch);
-//        $this->vd($content);
-//        die('gag');
         $info = curl_getinfo($ch);
 
         curl_close($ch);

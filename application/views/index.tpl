@@ -1,30 +1,30 @@
+<?php
+include_once('common/header.tpl');
+?>
 <sсript type="text/javascript" src="/js/jquery-3.1.1.min.js"></sсript>
-
 <div class="header">
     Type valid uri in a field beside.
 </div>
 
-<form action="index.php/UriController" method="post">
+<form action="/test_task/index.php/UriController" method="post">
     <div>
-        <input type="text" name="originalUri" value=""/>
+        <input type="text" name="originalUri" value="<?=$originalUri ?>"/>
     </div>
 
-    <div>
-        <input type="checkbox"/> Set short uri manually
-    </div>
+    <?php if ($shortUri) { ?>
+        <div class="shortUriCont" style="padding-top: 15px;">
+            Short Uri: <br/>
+            <input type="text" name="shortUri" value="<?=$shortUri ?>"/>
+        </div>
+    <?php } ?>
 
-    <div class="shortUriCont" id="zxc">
-        <input type="text" name="shortUri" value=""/>
-    </div>
-
     <div>
-        <input type="submit" value="Ok"/>
+        <input type="submit" value="Generate"/>
+        <?php if ($shortUri) { ?>
+            <input type="button" value="Save"/>
+        <?php } ?>
     </div>
 </form>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        //your code here
-        alert('zzz');
-    });
-</script>
+<?php
+include_once('common/footer.tpl');
+?>
