@@ -106,4 +106,17 @@ class UriController extends CI_Controller {
 
         return $info;
     }
+
+    public function saveUriPair() {
+        if (!$_POST['originalUri'] || !$_POST['shortUri']) {
+            echo 'Incorrect URI';
+
+            return false;
+        }
+
+        $this->load->model('Uri_model');
+        $this->Uri_model->saveUriPair();
+
+        echo 'URI saved successfully';
+    }
 }

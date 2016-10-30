@@ -3,20 +3,12 @@ class Uri_model extends CI_Model {
 
     var $originalUri = '';
     var $shortUri = '';
-    var $date = '';
+    var $date = 0;
 
-    function UriModel()
+    function Uri_model()
     {
         // Call the Model constructor
         parent::__construct();
-    }
-
-    function get_last_ten_entries()
-    {
-        var_dump($this->db);
-        die();
-        $query = $this->db->get('srv_uristore', 10);
-        return $query->result();
     }
 
     function saveUriPair()
@@ -25,16 +17,6 @@ class Uri_model extends CI_Model {
         $this->shortUri = $_POST['shortUri'];
         $this->date = time();
 
-        $this->db->insert('srv_uristore', $this);
+        $this->db->query('INSERT INTO srv_uristore (`original_uri`, `short_uri`, `date`) VALUES ("' . $this->originalUri . '", "' . $this->shortUri . '", "' . $this->date . '")');
     }
-
-    function update_entry()
-    {
-        $this->title   = $_POST['title'];
-        $this->content = $_POST['content'];
-        $this->date    = time();
-
-        $this->db->update('entries', $this, array('id' => $_POST['id']));
-    }
-
 }

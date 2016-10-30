@@ -1,6 +1,6 @@
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/common.css"/>
-    <sсript type="text/javascript" src="js/jquery-3.1.1.min.js"></sсript>
+    <link rel="stylesheet" type="text/css" href="/test_task/css/common.css"/>
+    <script src="/test_task/js/jquery-3.1.1.min.js"></script>
 </head>
 <body>
