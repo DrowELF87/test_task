@@ -81,12 +81,6 @@ class UriController extends CI_Controller {
         return $resultString;
     }
 
-    public function vd($var) {
-        echo '<pre>';
-        echo var_dump($var);
-        echo '</pre>';
-    }
-
     /**
      * Стучимся по указанному адресу и получаем коллбек страницы
      *
