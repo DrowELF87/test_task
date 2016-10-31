@@ -17,6 +17,10 @@ class UriController extends CI_Controller {
      * @return bool
      */
     private function checkUri() {
+        $this->load->model('Uri_model');
+        $this->load->model('User_model');
+
+        log_message('info', 'User try to check ' . $_POST['originalUri'] . ' at ' . date('d-m-Y', time()));
         if (!trim($_POST['originalUri'])) {
             echo 'Type valid Uri in a field';
 
@@ -38,15 +42,12 @@ class UriController extends CI_Controller {
         $data['shortUri'] = $this->generateUri($originalUri);
 
         // Получаем уже сохранённые урлы
-        $this->load->model('Uri_model');
         $data['stored'] = $this->Uri_model->getUserStored();
 
         // Получаем юзеров
-        $this->load->model('User_model');
         $data['users'] = $this->User_model->getUsers();
 
         // Получаем отправленные нам урлы
-        $this->load->model('Uri_model');
         $data['myUri'] = $this->Uri_model->getMyUri();
 
         $this->load->view('index.tpl', $data);
@@ -118,14 +119,20 @@ class UriController extends CI_Controller {
         return $info;
     }
 
+    /**
+     * Сохраняет пару УРЛов (оргиниальный, короткий)
+     *
+     * @return bool
+     */
     public function saveUriPair() {
+        $this->load->model('Uri_model');
+
         if (!$_POST['originalUri'] || !$_POST['shortUri']) {
             echo 'Incorrect URI';
 
             return false;
         }
 
-        $this->load->model('Uri_model');
         $inUse = $this->Uri_model->checkShortUri($_POST['shortUri']);
         if ($inUse) {
             echo 'Short URI already in use. Change it please.';
@@ -149,7 +156,24 @@ class UriController extends CI_Controller {
         }
 
         $this->Uri_model->saveUriPair($originalUri, $shortUri);
-
+        log_message('info', 'User saved original ' . $originalUri . ' and short uri ' . $shortUri . ' at ' . date('d-m-Y', time()));
         echo 'URI saved successfully';
+    }
+
+    /**
+     * Расшаривает УРЛ выбранному пользователю
+     *
+     * @return bool
+     */
+    public function shareUri() {
+        $this->load->model('Uri_model');
+
+        if (!is_numeric($_POST['uriId']) || !is_numeric($_POST['userId'])) {
+            echo 'Values should be integer!';
+
+            return false;
+        }
+        $this->Uri_model->shareUri();
+        echo 'Shared successfully';
     }
 }

@@ -29,16 +29,16 @@ include_once('common/header.tpl');
 </form>
 
 <?php if (!empty($stored)) { ?>
-        <select>
+        <select id="storedUri">
         <?php foreach ($stored as $storeItem) { ?>
-              <option value="<?=$storeItem->original_uri ?>">
+              <option value="<?=$storeItem->id ?>">
                   <?=$storeItem->short_uri ?>
               </option>
         <?php } ?>
         </select>
-        <input type="button" value="Share">
+        <input id="share" type="button" value="Share">
 
-        <select>
+        <select id="users">
             <?php foreach ($users as $user) { ?>
                 <option value="<?=$user->id ?>">
                     <?=$user->fname ?>&nbsp;<?=$user->lname ?>
@@ -58,8 +58,15 @@ include_once('common/header.tpl');
     </ul>
 </div>
 
-<div class="settings">
-    Settings
+<div class="urls">
+    Total URLs(<?=count($stored) ?>)
+    <ul class="urlsCont">
+        <?php foreach ($stored as $storeItem) { ?>
+        <li>
+            <a href="http://<?=$storeItem->original_uri ?>" target="_blank"><?=$storeItem->short_uri ?></a><br/>
+        </li>
+        <?php } ?>
+    </ul>
 </div>
 
 <script type="text/javascript">
@@ -68,7 +75,18 @@ include_once('common/header.tpl');
             $.ajax({
                 type: "POST",
                 url: "/test_task/index.php/UriController/saveUriPair",
-                data: "originalUri=" + $('#originalUriField').val() + "&shortUri=" + $('#shortUriField').val(),
+                data: "originalUri=" + $('#originalUriField').val() + "&userId=" + $('#shortUriField').val(),
+                success: function (msg) {
+                    $('#responseCont').html(msg);
+                }
+            })
+        });
+
+        $('#share').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/test_task/index.php/UriController/shareUri",
+                data: "uriId=" + $('#storedUri').val() + "&userId=" + $('#users').val(),
                 success: function (msg) {
                     $('#responseCont').html(msg);
                 }
@@ -77,6 +95,9 @@ include_once('common/header.tpl');
 
         $('.income').click(function () {
             $('.incomeCont').toggle('fast');
+        })
+        $('.urls').click(function () {
+            $('.urlsCont').toggle('fast');
         })
     });
 
