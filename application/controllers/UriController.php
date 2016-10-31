@@ -37,6 +37,18 @@ class UriController extends CI_Controller {
         // Если всё ок, то генерируем короткий урл
         $data['shortUri'] = $this->generateUri($originalUri);
 
+        // Получаем уже сохранённые урлы
+        $this->load->model('Uri_model');
+        $data['stored'] = $this->Uri_model->getUserStored();
+
+        // Получаем юзеров
+        $this->load->model('User_model');
+        $data['users'] = $this->User_model->getUsers();
+
+        // Получаем отправленные нам урлы
+        $this->load->model('Uri_model');
+        $data['myUri'] = $this->Uri_model->getMyUri();
+
         $this->load->view('index.tpl', $data);
     }
 
@@ -114,7 +126,29 @@ class UriController extends CI_Controller {
         }
 
         $this->load->model('Uri_model');
-        $this->Uri_model->saveUriPair();
+        $inUse = $this->Uri_model->checkShortUri($_POST['shortUri']);
+        if ($inUse) {
+            echo 'Short URI already in use. Change it please.';
+
+            return false;
+        }
+
+        $patternReplace = '(http(s|):\/\/|^)';
+        $originalUri = html_escape(str_replace(' ', '', preg_replace($patternReplace, '', $_POST['originalUri'])));
+        $shortUri = html_escape(str_replace(' ', '', $_POST['shortUri']));
+
+        // Ещё раз проверяем перед сохранением
+        $response = $this->getWebPage($originalUri);
+        if ((!$response['content_type'] && !$response['http_code']) || ($response['http_code'] === 404 || $response['http_code'] === 502)) {
+            echo 'Website is currently unavailable';
+
+            return false;
+        }
+        if (strlen($shortUri) > 10) {
+            $shortUri = substr($shortUri, 0, 10);
+        }
+
+        $this->Uri_model->saveUriPair($originalUri, $shortUri);
 
         echo 'URI saved successfully';
     }

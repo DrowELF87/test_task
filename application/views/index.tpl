@@ -49,12 +49,17 @@ include_once('common/header.tpl');
 
 <div class="income">
     Income (<?=count($myUri) ?>)
+    <ul class="incomeCont">
+        <?php foreach ($myUri as $myUriItem) { ?>
+            <li>
+                <a href="http://<?=$myUriItem->original_uri ?>" target="_blank"><?=$myUriItem->short_uri ?></a><br/>
+            </li>
+        <?php } ?>
+    </ul>
 </div>
 
-<div class="incomeCont">
-    <?php foreach ($myUri as $myUriItem) { ?>
-        <a href="http://<?=$myUriItem->original_uri ?>" target="_blank"><?=$myUriItem->short_uri ?></a><br/>
-    <?php } ?>
+<div class="settings">
+    Settings
 </div>
 
 <script type="text/javascript">
@@ -71,7 +76,7 @@ include_once('common/header.tpl');
         });
 
         $('.income').click(function () {
-            $('.incomeCont').toggle();
+            $('.incomeCont').toggle('fast');
         })
     });
 

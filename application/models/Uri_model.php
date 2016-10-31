@@ -19,17 +19,29 @@ class Uri_model extends CI_Model {
         return $query->result();
     }
 
-    function getMyUri () {
+    function getMyUri() {
         $query = $this->db->query('SELECT * FROM srv_uristore WHERE to_user = 1');
 
         return $query->result();
     }
 
-    function saveUriPair() {
-        $this->originalUri = $_POST['originalUri'];
-        $this->shortUri = $_POST['shortUri'];
+    function saveUriPair($originalUri = '', $shortUri = '') {
+        if (!$originalUri || !$shortUri) {
+            echo 'URI is incorrect.';
+
+            return false;
+        }
+
+        $this->originalUri = $originalUri;
+        $this->shortUri = $shortUri;
         $this->date = time();
 
         $this->db->query('INSERT INTO srv_uristore (`original_uri`, `short_uri`, `date`) VALUES ("' . $this->originalUri . '", "' . $this->shortUri . '", "' . $this->date . '")');
+    }
+
+    function checkShortUri($shortUri = '') {
+        $query = $this->db->query('SELECT * FROM srv_uristore WHERE short_uri = "' . $shortUri . '"');
+
+        return $query->result();
     }
 }
