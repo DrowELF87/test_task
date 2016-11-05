@@ -1,10 +1,18 @@
-.header {
-    font-size: 16px;
-    font-weight: bold;
-    padding-bottom: 10px;
+body {
+    background-color: #f0f0f0;
+}
+
+input {
+    margin: 5px;
 }
 
 div {
+    padding-bottom: 10px;
+}
+
+.header {
+    font-size: 16px;
+    font-weight: bold;
     padding-bottom: 10px;
 }
 
@@ -38,3 +46,22 @@ div {
     display: none;
 }
 
+.users {
+    float: right;
+    padding-right: 50px;
+}
+
+.shareBlock {
+    width: 400px;
+    border: 1px inset #fafafa;
+    padding: 10px;
+    display: none;
+}
+
+.shareTrig {
+    font-size: 20px;
+    color: #00a;
+    font-family: cursive;
+    cursor: pointer;
+    margin-top: 100px;
+}

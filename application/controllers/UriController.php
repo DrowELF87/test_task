@@ -74,8 +74,8 @@ class UriController extends CI_Controller {
             $resultString = $resultMatch[3][0];
         }
 
-        if (strlen($resultString) > 10) {
-            $resultString = substr($resultString, 0, 10);
+        if (strlen($resultString) > 20) {
+            $resultString = substr($resultString, 0, 20);
         }
 
         return $resultString;
@@ -140,11 +140,17 @@ class UriController extends CI_Controller {
 
         // Ещё раз проверяем перед сохранением
         $response = $this->getWebPage($originalUri);
-        if ((!$response['content_type'] && !$response['http_code']) || ($response['http_code'] === 404 || $response['http_code'] === 502)) {
+        if ((!$response['content_type'] && !$response['http_code']) || ($response['http_code'] === 502)) {
             echo 'Website is currently unavailable';
 
             return false;
         }
+        if ($response['http_code'] === 404) {
+            echo 'This page not found. Check URI please.';
+
+            return false;
+        }
+
         if (strlen($shortUri) > 10) {
             $shortUri = substr($shortUri, 0, 10);
         }
